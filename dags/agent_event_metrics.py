@@ -101,9 +101,9 @@ def move_analytics_table_to_stats(name, start_time, end_time):
     logger.info(f'execution_start={start_time} - execution_end={end_time}')
     conf = get_config(name)
     return move_data_into_stats(analytics_select_query(conf['analytics_table'],
-                                                      conf['events'],
-                                                      start_time,
-                                                      end_time))
+                                                       conf['events'],
+                                                       start_time,
+                                                       end_time))
 
 
 def move_suggestions_to_stats(*args, **kwargs):
