@@ -4,6 +4,8 @@ from airflow.operators.python_operator import PythonOperator
 from airflow.hooks.postgres_hook import PostgresHook
 from datetime import datetime, timedelta
 
+from logger import logger
+
 BATCH_SIZE = 200
 default_args = {
     'owner': 'Jaekwan',
@@ -39,8 +41,8 @@ def stats_upsert_query():
         DO NOTHING;"""
 
 
-def move_data_into_stat(analytics_query):
-    print(f'Query: {analytics_query}')
+def move_data_into_stats(analytics_query):
+    logger.info(f'Query: {analytics_query}')
 
     stats_conn = get_connection('STATS_DB')
     analytics_conn = get_connection('ANALYTICS_DB')
@@ -53,13 +55,13 @@ def move_data_into_stat(analytics_query):
 
     analytics_cursor.execute(analytics_query)
     count = 0
-    print(f'BATCH SIZE: {BATCH_SIZE}')
+    logger.info(f'BATCH SIZE: {BATCH_SIZE}')
     while True:
         rows = analytics_cursor.fetchmany(BATCH_SIZE)
         if not rows:
             break
 
-        print(f'Upserting # {len(rows)}')
+        logger.info(f'Upserting # {len(rows)}')
         for row in rows:
             stats_cursor.execute(stats_upsert_query(), [row[0], row[1], row[2]])
             stats_conn.commit()
@@ -96,9 +98,9 @@ def get_config(name):
 
 
 def move_analytics_table_to_stats(name, start_time, end_time):
-    print(f'execution_start={start_time} - execution_end={end_time}')
+    logger.info(f'execution_start={start_time} - execution_end={end_time}')
     conf = get_config(name)
-    return move_data_into_stat(analytics_select_query(conf['analytics_table'],
+    return move_data_into_stats(analytics_select_query(conf['analytics_table'],
                                                       conf['events'],
                                                       start_time,
                                                       end_time))
