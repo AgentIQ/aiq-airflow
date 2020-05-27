@@ -25,7 +25,6 @@ def get_connection(name):
 
 
 def analytics_select_query(table, interested_events, start_time, end_time):
-    print(interested_events)
     return f"""SELECT payload->>'action', payload->>'conversation_id', date
         FROM {table}
         WHERE payload->>'action' in {interested_events}
@@ -34,7 +33,7 @@ def analytics_select_query(table, interested_events, start_time, end_time):
 
 
 def stats_upsert_query():
-    return f"""INSERT INTO agent_events (event_name, conversation_id, time_stamp)
+    return """INSERT INTO agent_events (event_name, conversation_id, time_stamp)
         VALUES (%s, %s, %s)
         ON CONFLICT ON CONSTRAINT uniq_event_per_conversation
         DO NOTHING;"""
