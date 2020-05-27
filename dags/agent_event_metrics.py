@@ -9,7 +9,7 @@ from logger import logger
 BATCH_SIZE = 200
 default_args = {
     'owner': 'Jaekwan',
-    'depends_on_past': False,
+    'depends_on_past': True,
     'start_date': datetime(2020, 5, 1),
     'email': ['swe@agentiq.com'],
     'email_on_failure': True,
@@ -34,11 +34,14 @@ def analytics_select_query(table, interested_events, start_time, end_time):
         AND date between '{start_time}'::timestamp and '{end_time}'::timestamp;"""
 
 
-def stats_upsert_query():
-    return """INSERT INTO agent_events (event_name, conversation_id, time_stamp)
-        VALUES (%s, %s, %s)
+def stats_upsert_query(name, conv_id, stamp):
+    table = 'agent_events'
+    return f"""INSERT INTO {table} (event_name, conversation_id, time_stamp)
+        VALUES ('{name}', {conv_id}, '{stamp}'::timestamp)
         ON CONFLICT ON CONSTRAINT uniq_event_per_conversation
-        DO NOTHING;"""
+        DO UPDATE
+        SET event_name='{name}', conversation_id={conv_id}, time_stamp='{stamp}'
+        WHERE {table}.event_name='{name}' AND {table}.conversation_id={conv_id} AND {table}.time_stamp='{stamp}';"""
 
 
 def move_data_into_stats(analytics_query):
@@ -63,7 +66,8 @@ def move_data_into_stats(analytics_query):
 
         logger.info(f'Upserting # {len(rows)}')
         for row in rows:
-            stats_cursor.execute(stats_upsert_query(), [row[0], row[1], row[2]])
+            query = stats_upsert_query(row[0], row[1], row[2])
+            stats_cursor.execute(query)
             stats_conn.commit()
         count += len(rows)
 
