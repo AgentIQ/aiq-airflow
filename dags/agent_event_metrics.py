@@ -14,7 +14,7 @@ from tools.utils.file_util import dump_to_csv_file, load_csv_file
 default_args = {
     'owner': 'Jaekwan',
     'depends_on_past': False,
-    'start_date': datetime(2020, 5, 20),
+    'start_date': datetime(2020, 5, 27),
     'email': ['swe@agentiq.com'],
     'email_on_failure': True,
     'email_on_retry': False,
