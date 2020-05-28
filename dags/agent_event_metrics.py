@@ -6,7 +6,7 @@ from airflow.models import Variable
 from datetime import datetime, timedelta
 
 from logger import logger
-from utils.aws_helper import create_etl_daily_key
+from utils.aws_helper import make_s3_key
 from tools.utils.aws_util import s3_upload_file, s3_download_file
 from tools.utils.file_util import dump_to_csv_file, load_csv_file
 
@@ -74,7 +74,7 @@ def move_analytics_data_into_s3(analytics_query, name, execution_date):
                      ['event_name', 'conversation_id', 'time_stamp'],
                      rows)
 
-    key = create_etl_daily_key(ENVIRONMENT, AGENT_EVENT_PATH, execution_date.to_date_string())
+    key = make_s3_key(ENVIRONMENT, AGENT_EVENT_PATH, execution_date.to_date_string())
     s3_upload_file(ETL_BUCKET, file_name, key)
     logger.info(f'File uploaded: {file_name} {key} {ETL_BUCKET}')
     return f's3://{ETL_BUCKET}/{key}/{file_name}'
@@ -86,10 +86,10 @@ def move_s3_data_into_stats(name, execution_date):
 
     # Download from s3
     file_name = get_filename(name)
-    s3_file_path = create_etl_daily_key(ENVIRONMENT,
-                                        AGENT_EVENT_PATH,
-                                        execution_date.to_date_string(),
-                                        file_name=file_name)
+    s3_file_path = make_s3_key(ENVIRONMENT,
+                               AGENT_EVENT_PATH,
+                               execution_date.to_date_string(),
+                               file_name=file_name)
     downloaded = os.path.join(os.getcwd(), file_name)
     logger.info(f'File download: {file_name} {s3_file_path} {ETL_BUCKET}')
     s3_download_file(ETL_BUCKET, s3_file_path, downloaded)
