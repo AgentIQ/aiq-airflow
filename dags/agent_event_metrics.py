@@ -21,8 +21,6 @@ default_args = {
     'retries': 1,
     'retry_delay': timedelta(minutes=5)}
 
-ETL_BUCKET = Variable.get('ETL_S3_BUCKET')
-ENVIRONMENT = Variable.get('ENVIRONMENT')
 dag = DAG('agent_event_metrics',
           default_args=default_args,
           schedule_interval=timedelta(days=1))
@@ -74,10 +72,12 @@ def move_analytics_data_into_s3(analytics_query, name, execution_date):
                      ['event_name', 'conversation_id', 'time_stamp'],
                      rows)
 
-    key = make_s3_key(ENVIRONMENT, AGENT_EVENT_PATH, execution_date.to_date_string())
-    s3_upload_file(ETL_BUCKET, file_name, key)
-    logger.info(f'File uploaded: {file_name} {key} {ETL_BUCKET}')
-    return f's3://{ETL_BUCKET}/{key}/{file_name}'
+    bucket = Variable.get('ETL_S3_BUCKET')
+    env = Variable.get('ENVIRONMENT')
+    key = make_s3_key(env, AGENT_EVENT_PATH, execution_date.to_date_string())
+    s3_upload_file(bucket, file_name, key)
+    logger.info(f'File uploaded: {file_name} {key} {bucket}')
+    return f's3://{bucket}/{key}/{file_name}'
 
 
 def move_s3_data_into_stats(name, execution_date):
@@ -86,13 +86,15 @@ def move_s3_data_into_stats(name, execution_date):
 
     # Download from s3
     file_name = get_filename(name)
-    s3_file_path = make_s3_key(ENVIRONMENT,
+    bucket = Variable.get('ETL_S3_BUCKET')
+    env = Variable.get('ENVIRONMENT')
+    s3_file_path = make_s3_key(env,
                                AGENT_EVENT_PATH,
                                execution_date.to_date_string(),
                                file_name=file_name)
     downloaded = os.path.join(os.getcwd(), file_name)
-    logger.info(f'File download: {file_name} {s3_file_path} {ETL_BUCKET}')
-    s3_download_file(ETL_BUCKET, s3_file_path, downloaded)
+    s3_download_file(bucket, s3_file_path, downloaded)
+    logger.info(f'File download: {file_name} {s3_file_path} {bucket}')
 
     # Load CSV
     headers, rows = load_csv_file(downloaded)
