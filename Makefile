@@ -14,7 +14,7 @@ test-local:
 	pytest -vv
 
 test:
-	PYTHONPATH=$PYTHONPATH:. pytest
+	PYTHONPATH=$PYTHONPATH:. pytest --ignore=python-tools
 
 run-local:
 	docker-compose -f docker-compose-LocalExecutor.yml up
