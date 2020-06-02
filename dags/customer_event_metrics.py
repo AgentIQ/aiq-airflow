@@ -1,3 +1,8 @@
+"""
+To run through script or logger period locally,
+Use base script:
+    bash ./python-tool/script/backfill_customer_events.sh 2020-06-01 2020-06-10
+"""
 import os
 from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
