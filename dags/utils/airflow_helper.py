@@ -1,5 +1,5 @@
-
 from airflow.models import Variable
+
 
 def get_environments():
     return {'ENVIRONMENT': Variable.get('ENVIRONMENT'),

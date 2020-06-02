@@ -4,7 +4,6 @@ from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from airflow.operators.python_operator import PythonOperator
 from datetime import datetime, timedelta
-from airflow.models import Variable
 from utils.airflow_helper import get_environments
 from tools.config.config import config
 
@@ -27,6 +26,7 @@ dag = DAG('Daily_topic_clustering',
 env = os.environ.copy()
 env.update(get_environments())
 
+
 def download_nltk_data(*args, **kwargs):
     for data_file in config['nltk_models']:
         nltk.download(data_file)
@@ -37,7 +37,6 @@ download_model = PythonOperator(
     task_id='download_dependent_data',
     python_callable=download_nltk_data,
     dag=dag)
-
 
 
 # The time is pinned due to the timezone handling within simple_stats script

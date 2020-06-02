@@ -2,7 +2,6 @@ import os
 from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from datetime import datetime, timedelta
-from airflow.models import Variable
 from utils.airflow_helper import get_environments
 
 
