@@ -1,6 +1,6 @@
 """
-To run through script or logger period locally,
-Use base script:
+To run locally through script,
+Use bash script:
     bash ./python-tool/script/backfill_customer_events.sh 2020-06-01 2020-06-10
 """
 import os
