@@ -13,7 +13,8 @@ The second script fetches data from s3 and filters only interested data. Finally
 * Tables: active_users, customer_metric, customer_events
 
 ## Daily Result (S3)
-The tasks first retrieves data from anaytics and copy to aws s3 with the below path([Go](https://console.aws.amazon.com/s3/buckets/agentiq-etl/?region=us-east-1&tab=overview))
+The tasks first retrieves data from anaytics and copy to aws s3 with the below path
+([Go](https://console.aws.amazon.com/s3/buckets/agentiq-etl/?region=us-east-1&tab=overview))
 > s3://agentiq-etl/{env}/customer_events/daily/{date}/{}.csv
 
 ## Run Script locally

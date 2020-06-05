@@ -11,7 +11,8 @@ The following events are collected from analytics database
 * Tables: documents, assets, suggestions
 
 ## Intermediary Storage (S3)
-The tasks first retrieves data from anaytics and copy to aws s3 with the below path([Go](https://console.aws.amazon.com/s3/buckets/agentiq-etl/?region=us-east-1&tab=overview))
+The tasks first retrieves data from anaytics and copy to aws s3 with the below path
+([Go](https://console.aws.amazon.com/s3/buckets/agentiq-etl/?region=us-east-1&tab=overview))
 > s3://agentiq-etl/{env}/agent_event/daily/{date}/agent_(suggestion|document|asset)_events.csv
 
 ## Return
