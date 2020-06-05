@@ -19,19 +19,16 @@ default_args = {
 
 dag = DAG('daily_conversation_export',
           default_args=default_args,
-          # run every day at 3:30am PST after conversation closure
-          schedule_interval='30 10 * * 1-7')
-
-# It is not recommanded to use Variable with global scope
-# but not sure if there is another way to inject airflow variables
-# into envionment variables.
-env = os.environ.copy()
-env.update(get_environments())
+          # run every day at 12:30am PST after conversation closure
+          schedule_interval='30 7 * * 1-7')
 
 
 def run_export(*args, **kwargs):
     start_time = kwargs['execution_date'].subtract(days=1).format("%Y-%m-%d %H:%M:%S")
     end_time = kwargs['execution_date'].format("%Y-%m-%d %H:%M:%S")
+
+    # set environment variables
+    os.environ.update(get_environments())
 
     return run_exports(start_time, end_time)
 

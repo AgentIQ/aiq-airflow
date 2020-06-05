@@ -1,4 +1,5 @@
-
 import sys
 
-sys.path.extend(['./python-tools/', './aiq-dynamo-python/'])
+
+if './' not in sys.path:
+    sys.path.extend(['./', '../'])
