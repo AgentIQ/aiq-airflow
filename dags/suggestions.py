@@ -1,6 +1,24 @@
 """
 # Suggestions
-This dag:
+* Database: Anayltics
+* Tables: conversations, messages
+
+## Intermediary Storage (S3)
+daily raw data conversation storage:
+/agentiq-suggestion-data/{env}/daily_conversations_raw/{date}
+
+daily transformed conversation data storage:
+/agentiq-suggestion-data/{env}/daily_conversations_data/{date}
+
+daily training conversation data storage:
+/agentiq-suggestion-data/{env}/daily_training_data/{date}
+
+daily suggestion models
+/agentiq-ml-models/suggestions/daily/{env}/{year}/{month}/{day}
+
+## Return
+This dag generates custom model files for use by suggestion matcher in aiengine,
+ it does the following:
 
 * extracts today's conversations from analytics
 * transforms it into format suitable for training
@@ -20,7 +38,7 @@ from utils.airflow_helper import get_environments
 default_args = {
     'owner': 'Akshay',
     'depends_on_past': False,
-    'start_date': datetime(2020, 5, 27),
+    'start_date': datetime(2020, 6, 15),
     'email': ['swe@agentiq.com'],
     'email_on_failure': True,
     'email_on_retry': False,
@@ -29,8 +47,9 @@ default_args = {
 
 dag = DAG('suggestions',
           default_args=default_args,
-          # run every day at 4:30am PST
-          schedule_interval='30 11 * * 1-7')
+          catchup=False,
+          # run every day at 1:30am PST
+          schedule_interval='30 08 * * 1-7')
 dag.doc_md = __doc__
 
 # It is not recommanded to use Variable with global scope
