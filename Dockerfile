@@ -19,7 +19,7 @@ ARG AIRFLOW_DEPS=""
 ARG PYTHON_DEPS=""
 ENV AIRFLOW_HOME=${AIRFLOW_USER_HOME}
 
- 
+
 RUN set -ex \
     && buildDeps=' \
         freetds-dev \
@@ -31,7 +31,7 @@ RUN set -ex \
         git \
     ' \
     && apt-get update -yqq \
-    && apt-get upgrade -yqq 
+    && apt-get upgrade -yqq
 
 RUN apt-get install -y apt-utils
 RUN apt-get install -yqq --no-install-recommends \
@@ -69,7 +69,7 @@ RUN apt-get purge --auto-remove -yqq $buildDeps \
         /usr/share/man \
         /usr/share/doc \
         /usr/share/doc-base
- 
+
 
 # aws dependency
 RUN apt-get install unzip && cd /tmp && \
@@ -77,7 +77,7 @@ RUN apt-get install unzip && cd /tmp && \
     unzip awscli-bundle.zip && \
     ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws && \
     rm awscli-bundle.zip && rm -rf awscli-bundle
- 
+
 RUN curl -sSL https://get.docker.com/ | sh
 
 # Let's start with some basic stuff.
@@ -108,6 +108,7 @@ COPY ./python-tools ${AIRFLOW_USER_HOME}/python-tools
 
 WORKDIR ${AIRFLOW_USER_HOME}
 RUN pip install -r python-tools/requirements.txt
+RUN python3 -m download_deps
 
 EXPOSE 8080 5555 8793
 
