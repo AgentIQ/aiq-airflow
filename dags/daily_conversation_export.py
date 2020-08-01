@@ -25,12 +25,13 @@ dag = DAG('daily_conversation_export',
 
 
 def run_export(*args, **kwargs):
+    # time might need to fine control again
     start_time = kwargs['execution_date'].subtract(days=1).format("%Y-%m-%d %H:%M:%S")
     end_time = kwargs['execution_date'].format("%Y-%m-%d %H:%M:%S")
 
     env = Variable.get('ENVIRONMENT')
     # set environment variables
-    #os.environ.update(get_environments())
+    os.environ.update(get_environments())
 
     return run_exports(start_time, end_time, env)
 
