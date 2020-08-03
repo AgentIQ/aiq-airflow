@@ -17,7 +17,7 @@ default_args = {
     'retries': 1,
     'retry_delay': timedelta(minutes=5)}
 
-dag = DAG('daily_conversation_export',
+dag = DAG('daily_data_export',
           default_args=default_args,
           # run every day at 3:10am PST after conversation closure
           schedule_interval='10 3 * * 1-7')
