@@ -1,7 +1,6 @@
 import os
 from airflow import DAG
 from airflow.models import Variable
-from airflow.operators.bash_operator import BashOperator
 from airflow.operators.python_operator import PythonOperator
 from datetime import datetime, timedelta
 from utils.airflow_helper import get_environments
@@ -41,4 +40,3 @@ run_export = PythonOperator(
     python_callable=run_export,
     provide_context=True,
     dag=dag)
-

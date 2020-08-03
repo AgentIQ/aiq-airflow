@@ -1,5 +1,4 @@
 
-from os.path import expanduser
 from tools.api_exports.agents import fetch_agents
 from tools.api_exports.customers import fetch_customers
 from tools.api_exports.conversations import fetch_conversations
@@ -17,6 +16,7 @@ import argparse
 EXPORT_BUCKET_NAME = 'exports-api'
 DEFAULT_SPLIT_SIZE = 25
 DEFAULT_DELTHA_DAYS = 2
+
 
 def split_into_batches(records, batch_split_size):
     if not records:
@@ -37,6 +37,7 @@ def batch_write(file_path, batch_func, batch_split_size=None):
             batch_func(batch)
             time.sleep(2)
 
+
 def save_to_s3(exports_file_path, env):
     bucket = EXPORT_BUCKET_NAME
     sub_path = append_date_to_path(env)
@@ -44,6 +45,7 @@ def save_to_s3(exports_file_path, env):
                    exports_file_path,
                    sub_path)
     print(f"{exports_file_path} uploaded to {bucket}/{sub_path} ")
+
 
 def export_conversations_to_dynamo(start_date, end_date, env):
     conversations_file_path = fetch_conversations(start_date, end_date)
@@ -93,7 +95,10 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--start_date', type=str, help='Start date - format YYYY-MM-DD %H:%m:%s', default=None)
     parser.add_argument('--end_date', type=str, help='End date - format YYYY-MM-DD %H:%m:%s', default=None)
-    parser.add_argument('--s3_bucket', type=str, help='S3 bucket name to temporarily store intermediate data', default=EXPORT_BUCKET_NAME)
+    parser.add_argument('--s3_bucket',
+                        type=str,
+                        help='S3 bucket name to temporarily store intermediate data',
+                        default=EXPORT_BUCKET_NAME)
 
     args = parser.parse_args()
     run_exports(args.start_date, args.end_date, 'demo4', args.s3_bucket)
