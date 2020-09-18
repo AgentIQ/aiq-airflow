@@ -115,7 +115,7 @@ def validate_exports(start_date=None, end_date=None):
         logging.info(f'Validating  agents from dynamo from {start_date} to {end_date}')
         agents_validator = dynamoRecordsValidator('agents', validation_fields, core_db_conn)
         is_valid = agents_validator.validate(AgentsTable.get_agent_records(start_date=start_date, end_date=end_date),
-                                               coredb_id_field)
+                                             coredb_id_field)
         logging.info(f'Finished validating agents from dynamo, {is_valid}')
         return is_valid
 
@@ -123,7 +123,7 @@ def validate_exports(start_date=None, end_date=None):
         logging.info(f'Validating  customers from dynamo from {start_date} to {end_date}')
         customers_validator = dynamoRecordsValidator('customers', validation_fields, core_db_conn)
         is_valid = customers_validator.validate(CustomersTable.get_customer_records(start_date=start_date, end_date=end_date),
-                                                  coredb_id_field)
+                                                coredb_id_field)
         logging.info(f'Finished validating customers from dynamo {is_valid}')
         return is_valid
 
