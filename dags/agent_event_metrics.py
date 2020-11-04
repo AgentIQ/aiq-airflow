@@ -33,16 +33,19 @@ from logger import logger
 from utils.aws_helper import make_s3_key
 from tools.utils.aws_util import s3_upload_file, s3_download_file
 from tools.utils.file_util import dump_to_csv_file, load_csv_file
+from utils.email_helper import email_notify
 
 default_args = {
     'owner': 'Jaekwan',
     'depends_on_past': False,
     'start_date': datetime(2020, 5, 27),
     'email': ['swe@agentiq.com'],
-    'email_on_failure': True,
+    'email_on_failure': False,
     'email_on_retry': False,
     'retries': 1,
-    'retry_delay': timedelta(minutes=5)}
+    'retry_delay': timedelta(minutes=5),
+    'on_failure_callback': email_notify
+}
 
 dag = DAG('agent_event_metrics',
           catchup=False,

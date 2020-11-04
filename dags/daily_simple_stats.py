@@ -17,6 +17,7 @@ from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from datetime import datetime, timedelta
 from utils.airflow_helper import get_environments
+from utils.email_helper import email_notify
 
 
 default_args = {
@@ -27,7 +28,9 @@ default_args = {
     'email_on_failure': False,
     'email_on_retry': False,
     'retries': 1,
-    'retry_delay': timedelta(minutes=5)}
+    'retry_delay': timedelta(minutes=5),
+    'on_failure_callback': email_notify
+}
 
 dag = DAG('Daily_simple_stats_for_conversation',
           catchup=False,
